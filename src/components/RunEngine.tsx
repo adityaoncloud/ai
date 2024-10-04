@@ -4,10 +4,10 @@ import { Input } from './ui/input';
 
 const RunEnginePage = () => {
   const [engineForm, setEngineForm] = useState({
-    ruleId: '',
-    input: '',
-    status: '',
-    reasonForViolation: '',
+    ruleId: "",
+    input: "",
+    status: "",
+    reasonForViolation: "",
   });
   const [response, setResponse] = useState('');
 
