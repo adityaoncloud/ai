@@ -5,40 +5,44 @@ import RulesForm from './components/SubmitRules';
 import SignUpPage from './components/Signup';
 import LoginPage from './components/Login';
 import PredictPage from './components/Predict';
+import ProtectedRoute from './ProtectedRoute'
 
 const App = () => {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100 p-4">
-        <h1 className="text-3xl font-bold mb-4">Aiver</h1>
-        <nav className="mb-4">
-          <Link className="mr-4 text-blue-500" to="/user-rules">
-            User Rules
-          </Link>
-          <Link className="mr-4 text-blue-500" to="/run-engine">
-            Run Engine
-          </Link>
-          <Link className='mr-4 text-blue-500' to="/add-rules">
-            Add Rules 
-          </Link>
-          <Link className='mr-4 text-blue-500' to="/signup">
-            Sign-up
-          </Link>
-          <Link className='mr-4 text-blue-500' to="/login">
-            Login
-          </Link>
-          <Link className='mr-4 text-blue-500' to="/predict">
-            Predict
-          </Link>
-        </nav>
-
+    <div>
+    <nav className="bg-white shadow-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex">
+            
+              <h1 className=''>Aiver</h1>
+              <Link to="/user-rules" className="flex-shrink-0 flex items-center">
+                <h1>User-rules</h1>
+              </Link>
+            </div>
+            <div className="flex items-center">
+              <Link to="/run-engine" className="p-2 rounded-md text-gray-600 hover:bg-gray-100">
+                Run Engine
+                <span className="sr-only">Run Engine</span>
+              </Link>
+              <Link to="/add-rules" className="ml-4 p-2 rounded-md text-gray-600 hover:bg-gray-100">
+                Add rules
+              </Link>
+              <Link to="/predict" className="ml-4 p-2 rounded-md text-gray-600 hover:bg-gray-100">
+                Predict
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
         <Routes>
-          <Route path="/user-rules" element={<UserRulesPage />} />
-          <Route path="/run-engine" element={<RunEnginePage />} />
-          <Route path="/add-rules" element={<RulesForm/>} />
+          <Route path="/user-rules" element={<ProtectedRoute><UserRulesPage /></ProtectedRoute>} />
+          <Route path="/run-engine" element={<ProtectedRoute><RunEnginePage/></ProtectedRoute>} />
+          <Route path="/add-rules" element={<ProtectedRoute><RulesForm/></ProtectedRoute>} />
           <Route path="/signup" element={<SignUpPage/>}/>
           <Route path="/login" element={<LoginPage/>}/>
-          <Route path="/predict" element={<PredictPage/>}/>
+          <Route path="/predict" element={<ProtectedRoute><PredictPage/></ProtectedRoute>}/>
         </Routes>
       </div>
     </Router>

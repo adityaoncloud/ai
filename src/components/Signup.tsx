@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpPage: React.FC = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [message, setMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,6 +17,9 @@ const SignUpPage: React.FC = () => {
       const response = await axios.post('http://15.206.194.232:8083/api/v1/auth/signup', formData);
       setMessage('Sign up successful!');
       console.log('Response:', response.data);
+
+      // Optionally, redirect to the login page after successful sign up
+      navigate('/login');
     } catch (error) {
       setMessage('Error signing up');
       console.error('Error:', error);

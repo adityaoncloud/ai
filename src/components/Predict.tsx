@@ -1,14 +1,17 @@
-// src/pages/PredictPage.tsx
+import React, { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
-import React, { useState } from "react";
 
-const PredictPage: React.FC = () => {
-  const [inputText, setInputText] = useState<string>("");
-  const [responseText, setResponseText] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+export default function PredictPage() {
+  const [inputText, setInputText] = useState<string>("")
+  const [responseText, setResponseText] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+    event.preventDefault()
 
     try {
       const response = await fetch("/predict", {
@@ -17,62 +20,75 @@ const PredictPage: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ text: inputText }),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to fetch the prediction.");
+        throw new Error("Failed to fetch the prediction.")
       }
 
-      const data = await response.json();
-      setResponseText(data.response); // Assuming `data.response` is the response text
-      setError(null);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err.message);
-      setResponseText(null);
+      const data = await response.json()
+      setResponseText(data.response)
+      setError(null)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError("An unknown error occurred")
+      }
+      setResponseText(null)
     }
-  };
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold mb-6">Ask for a Prediction</h1>
-      <form onSubmit={handleSubmit} className="w-full max-w-md bg-white p-6 shadow-lg rounded-md">
-        <div className="mb-4">
-          <label htmlFor="inputText" className="block text-gray-700 font-medium mb-2">
-            Enter your question:
-          </label>
-          <input
-            type="text"
-            id="inputText"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            placeholder="What are some good vegetarian recipes?"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md"
-        >
-          Submit
-        </button>
-      </form>
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+
+      <main className="flex-grow flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Ask for a Prediction</CardTitle>
+            <CardDescription>Enter your question and get an AI-powered prediction</CardDescription>
+          </CardHeader>
+          <form onSubmit={handleSubmit}>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label htmlFor="inputText" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                    Enter your question:
+                  </label>
+                  <Input
+                    type="text"
+                    id="inputText"
+                    value={inputText}
+                    onChange={(e) => setInputText(e.target.value)}
+                    placeholder="What are some good vegetarian recipes?"
+                  />
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button type="submit" className="w-full">Submit</Button>
+            </CardFooter>
+          </form>
+        </Card>
+      </main>
 
       {responseText && (
-        <div className="mt-6 p-4 bg-green-100 text-green-800 rounded-md w-full max-w-md">
-          <h2 className="text-xl font-bold mb-2">Prediction Response:</h2>
-          <p>{responseText}</p>
+        <div className="max-w-md mx-auto mt-6 w-full px-4">
+          <Alert>
+            <AlertTitle>Prediction Response:</AlertTitle>
+            <AlertDescription>{responseText}</AlertDescription>
+          </Alert>
         </div>
       )}
 
       {error && (
-        <div className="mt-6 p-4 bg-red-100 text-red-800 rounded-md w-full max-w-md">
-          <h2 className="text-xl font-bold mb-2">Error:</h2>
-          <p>{error}</p>
+        <div className="max-w-md mx-auto mt-6 w-full px-4">
+          <Alert variant="destructive">
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         </div>
       )}
     </div>
-  );
-};
-
-export default PredictPage;
+  )
+}
